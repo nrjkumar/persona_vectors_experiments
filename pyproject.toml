@@ -40,6 +40,7 @@ dependencies = [
     "tqdm",
     "trl",
     "debugpy",
+    "numpy>=1.26.4",
 ]
 
 [project.optional-dependencies]
@@ -137,3 +138,83 @@ exclude_lines = [
     "if 0:",
     "if __name__ == .__main__.:",
 ]
+
+[tool.cluv]
+# All variables below can be overridden per cluster (except data_source).
+
+# Job script to use by default when one isn't passed to the `submit` command, on all clusters.
+# Can also be overridden per job submission.
+job_script_path = "scripts/job.sh"
+
+# Where to store job results by default.
+results_path = "$SCRATCH/logs/persona_vectors_experiments"
+
+# On clusters, Cluv creates a symlink (a shortcut) in your project folder to the results_path dir.
+# This makes it easier to keep your project in $HOME and to see the results which are on $SCRATCH.
+results_symlink = "logs"
+
+## The path where the project should be replicated on remote clusters.
+# project_dir = "$HOME/<project_name>"
+
+## Where to read the data from when synchronizing data to all clusters.
+# data_source = "<cluster>:<dataset_path_on_the_cluster>"
+
+## Where the dataset should be replicated on all clusters.
+# datasets_path = "<path_to_copy_datasets_on_all_clusters>"
+
+[tool.cluv.env]
+# Environment variables applied when using Slurm commands on all clusters.
+# Assume that compute nodes don't have internet access by default. Override below when they do.
+UV_OFFLINE = "1"
+WANDB_MODE = "offline"
+
+[tool.cluv.local]
+# Settings (environment variables) applied when using cluv on a local machine (not on a Slurm cluster).
+# Fake "$SCRATCH" directory to use when not on a Slurm cluster.
+# This makes the examples runnable either from a laptop or from a Slurm cluster.
+env = { SCRATCH = "$HOME/scratch" }
+
+[tool.cluv.sbatch_args]
+# sbatch flags applied on all clusters. CLI-supplied flags take precedence.
+time = "3:00:00"
+requeue = true
+
+###  --------------   Clusters Config   --------------  ###
+
+[tool.cluv.clusters.mila]
+# Overrides specific to the Mila cluster.
+env = { UV_OFFLINE = "0", WANDB_MODE = "online" }
+
+[tool.cluv.clusters.tamia]
+
+[tool.cluv.clusters.killarney]
+# For example, you might not have a $SCRATCH on Killarney. This can be overwritten here.
+results_path = "$HOME/logs/cluv"
+
+[tool.cluv.clusters.vulcan]
+
+[tool.cluv.clusters.rorqual]
+sbatch_args = { account = "rrg-bengioy-ad" }
+# With more than one allocation on a cluster, `cluv submit rorqual` submits one job per allocation
+# and keeps the first one that starts, cancelling the others:
+# sbatch_args = [{ account = "rrg-bengioy-ad" }, { account = "def-bengioy" }]
+
+[tool.cluv.clusters.fir]
+env = { UV_OFFLINE = "0", WANDB_MODE = "online" }
+sbatch_args = { account = "def-irina" }
+
+[tool.cluv.clusters.nibi]
+project_dir = "$HOME/persona_vectors_experiments"
+env = { UV_OFFLINE = "0", WANDB_MODE = "online" }
+sbatch_args = { account = "rrg-bengioy-ad" }
+
+[tool.cluv.clusters.trillium]
+sbatch_args = { account = "rrg-bengioy-ad" }
+
+[tool.cluv.clusters.trillium-gpu]
+sbatch_args = { account = "rrg-bengioy-ad" }
+
+[tool.cluv.clusters.narval]
+# Mila doesn't have an allocation on Narval anymore.
+project_dir = "$HOME/persona_vectors_experiments"
+sbatch_args = { account = "def-bengioy" }

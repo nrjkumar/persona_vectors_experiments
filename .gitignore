@@ -115,3 +115,6 @@ post_training/experiments/
 post_training/data/
 post_training/eval/
 Dockerfile
+
+# Local CPU-only smoke harness + its ForecastBench review notes
+tests/smoke/

@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32'",
@@ -2170,6 +2170,7 @@ dependencies = [
     { name = "debugpy" },
     { name = "fire" },
     { name = "matplotlib" },
+    { name = "numpy" },
     { name = "openai" },
     { name = "packaging" },
     { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.14'" },
@@ -2216,6 +2217,7 @@ requires-dist = [
     { name = "isort", marker = "extra == 'dev'" },
     { name = "matplotlib" },
     { name = "mypy", marker = "extra == 'dev'" },
+    { name = "numpy", specifier = ">=1.26.4" },
     { name = "openai" },
     { name = "packaging" },
     { name = "pandas" },
